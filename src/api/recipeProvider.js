@@ -13,3 +13,23 @@ export async function getAllRecipes() {
     throw error;
   }
 }
+
+export async function searchRecipes(query) {
+  try {
+    const trimmed = String(query ?? "").trim();
+    if (!trimmed) {
+      return getAllRecipes();
+    }
+    const response = await fetch(
+      `${RECIPES_BASE}/search?q=${encodeURIComponent(trimmed)}`
+    );
+    if (!response.ok) {
+      throw new Error("Search failed");
+    }
+    const data = await response.json();
+    return data.recipes ?? [];
+  } catch (error) {
+    console.error("[recipeProvider] searchRecipes:", error);
+    throw error;
+  }
+}
