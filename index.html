@@ -13,7 +13,13 @@
 </head>
 <body>
 
-  <div id="app"></div>
+  <div id="recipes-view"></div>
+  <div id="detail-view" class="hidden" aria-label="Recipe detail"></div>
+
+  <div id="loader-overlay" class="loader-container" hidden aria-live="polite">
+    <div class="spinner"></div>
+    <p>Chargement des recettes...</p>
+  </div>
 
   <script type="module" src="./src/main.js"></script>
 </body>
