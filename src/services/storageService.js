@@ -17,3 +17,13 @@ export function addToFavorites(recipe) {
   localStorage.setItem(FAVORITES_KEY, JSON.stringify(next));
   return next;
 }
+export function toggleFavorite(recipeId) {
+  let fav = getFavorites();
+  if (fav.includes(recipeId)) {
+    fav = fav.filter(id => id !== recipeId);
+  } else {
+    fav.push(recipeId);
+  }
+  localStorage.setItem(FAVORITES_KEY, JSON.stringify(fav));
+  return fav;
+}
