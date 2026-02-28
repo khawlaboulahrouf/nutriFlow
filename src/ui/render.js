@@ -59,3 +59,50 @@ export function displayLayout() {
   displayDashboard(getTotalCalories(), DAILY_GOAL);
   updateFavoriteCount();
 }
+/**
+ * Renders the recipe grid only (no detail view).
+ */
+export function renderRecipes(recipes) {
+  const grid = document.getElementById("recipesGrid");
+  const empty = document.getElementById("noResults");
+  if (!grid) return;
+
+  if (!recipes || recipes.length === 0) {
+    grid.innerHTML = "";
+    if (empty) empty.hidden = false;
+    return;
+  }
+
+  if (empty) empty.hidden = true;
+  const favorites = getFavorites();
+
+  grid.innerHTML = recipes
+    .map((recipe) => {
+      const calories = recipe.caloriesPerServing ?? recipe.calories ?? 0;
+      const badge = getCalorieBadge(calories);
+      const isFavorite = favorites.includes(recipe.id);
+
+      return `
+        <article class="nf-card" data-id="${recipe.id}" data-calories="${calories}">
+          <div class="nf-card-image-wrapper">
+            <img class="nf-card-image" src="${escapeAttr(recipe.image)}" alt="${escapeAttr(recipe.name)}" loading="lazy" />
+            <span class="nf-badge ${badge.className}">${escapeHtml(badge.label)}</span>
+          </div>
+          <div class="nf-card-body">
+            <h3 class="nf-card-title">${escapeHtml(recipe.name)}</h3>
+            <p class="nf-card-meta">${calories} KCal · ${escapeHtml(recipe.cuisine || "Balanced")}</p>
+            <div class="nf-card-actions">
+              <button class="nf-button nf-button--primary nf-card-add" type="button">Add in my day</button>
+              <button
+                class="nf-icon-button nf-card-fav ${isFavorite ? "nf-icon-button--active" : ""}"
+                type="button"
+                aria-pressed="${isFavorite}"
+                aria-label="Toggle favorite"
+              >♥</button>
+            </div>
+          </div>
+        </article>
+      `;
+    })
+    .join("");
+}
